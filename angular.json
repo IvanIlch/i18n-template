@@ -4,6 +4,13 @@
   "newProjectRoot": "projects",
   "projects": {
     "i18n-template": {
+      "i18n": {
+        "sourceLocale": "en-US",
+        "locales": {
+          "uk": "src/locale/messages.uk.xlf",
+          "ru": "src/locale/messages.ru.xlf"
+        }
+      },
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -12,17 +19,16 @@
       },
       "root": "",
       "sourceRoot": "src",
-      "prefix": "app",
+      "prefix": "",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
+            "localize": true,
             "outputPath": "dist/i18n-template",
             "index": "src/index.html",
             "browser": "src/main.ts",
-            "polyfills": [
-              "zone.js"
-            ],
+            "polyfills": ["zone.js", "@angular/localize/init"],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -32,6 +38,7 @@
               }
             ],
             "styles": [
+              "@angular/material/prebuilt-themes/magenta-violet.css",
               "src/styles.scss"
             ],
             "scripts": []
@@ -56,6 +63,12 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
+            },
+            "uk": {
+              "localize": ["uk"]
+            },
+            "ru": {
+              "localize": ["ru"]
             }
           },
           "defaultConfiguration": "production"
@@ -68,19 +81,30 @@
             },
             "development": {
               "buildTarget": "i18n-template:build:development"
+            },
+            "uk": {
+              "buildTarget": "i18n-template:build:development,uk"
+            },
+            "ru": {
+              "buildTarget": "i18n-template:build:development,ru"
             }
           },
           "defaultConfiguration": "development"
         },
         "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n"
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "outputPath": "src/locale",
+            "format": "xlf"
+          }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "polyfills": [
               "zone.js",
-              "zone.js/testing"
+              "zone.js/testing",
+              "@angular/localize/init"
             ],
             "tsConfig": "tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
@@ -91,6 +115,7 @@
               }
             ],
             "styles": [
+              "@angular/material/prebuilt-themes/magenta-violet.css",
               "src/styles.scss"
             ],
             "scripts": []
